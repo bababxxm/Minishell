@@ -6,7 +6,7 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 18:22:18 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/19 20:28:21 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/04/19 20:37:33 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,13 @@ char    *parser(char *input, t_shell *shell)
     return (NULL);
 }
 
-void    execute(t_cmds *cmds, t_shell *shell)
+void    execute(char *input, t_shell *shell)
 {
-
+    char    *line;
+    
+    line = parser(input, shell);
+    if (!line)
+        exit(EXIT_FAILURE);
 }
 
 void    signal_handler(int signal)
@@ -71,8 +75,7 @@ int main(int argc, char *argv[], char *env[])
         shell.input = readline(PROMPT);
         if (!shell.input)
             exit_shell(&shell);
-        parser(shell.input, &shell);
-        execute(shell.cmds, &shell);
+        execute(shell.input, &shell);
         add_history(shell.input);
         free(shell.input);
     }
