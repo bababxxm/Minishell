@@ -6,7 +6,7 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 18:22:50 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/16 21:45:26 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/04/19 22:03:45 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+# include "libft.h"
 # include "token.h"
 # include "command.h"
 
@@ -32,10 +33,9 @@
 
 # define PROMPT GREEN"➜ "RESET
 
-typedef struct s_list
-{
-	struct s_list	*next;
-}   t_list;
+# ifndef PATH_MAX
+#  define PATH_MAX 4096
+# endif
 
 typedef struct s_env
 {
@@ -48,7 +48,6 @@ typedef struct s_env
 typedef struct s_shell
 {
 	char			*input;
-	char			*line;
 	char			*path;
 	char			*user;
 	char			*home;
@@ -60,22 +59,23 @@ typedef struct s_shell
 	int				exit_code;			
 }	t_shell;
 
+// main
+void    init_shell(t_shell *shell, char **env);
+char    *parser(t_shell *shell, char *input);
+void    execute_cmds(t_shell *shell, char *input);
+void    exit_shell(t_shell *shell);
+
 // utils
-int		ft_strlen(char *str);
 int		ft_strlen_to_c(char *str, char c);
-int		ft_strncmp(const char *s1, const char *s2, size_t n);
-char	*ft_strdup(char *src);
 void	*last_node(void *node);
-void	node_addback(void **node, void *new);
+void	ft_lstadd_back(void **node, void *new);
 
 // env
 t_env	*new_env(char *key, char equal, char *value);
 char	*dup_var(char *str, char c);
 t_env	*dup_env(char *env[]);
-t_env	*search_env(t_env *env, char *key);
+char	*search_env(char *key, t_env *env);
 void	clear_env(t_env *env);
-void	add_env(t_env *env, char *key, char *value);
-void	del_env(t_env *env, char *key);
 
 // token
 t_token	*get_tokens(char *input);

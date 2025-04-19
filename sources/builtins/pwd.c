@@ -1,24 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstiter_bonus.c                                 :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pkhienko <pkhienko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/29 15:17:14 by pkhienko          #+#    #+#             */
-/*   Updated: 2024/08/30 17:32:41 by pkhienko         ###   ########.fr       */
+/*   Created: 2025/04/19 21:57:18 by sklaokli          #+#    #+#             */
+/*   Updated: 2025/04/19 21:57:20 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "minishell.h"
 
-void	ft_lstiter(t_list *lst, void (*f)(void *))
+int	pwd_builtin(t_shell *shell)
 {
-	if (!lst || !f)
-		return ;
-	while (lst != NULL)
+	if (shell->pwd)
 	{
-		f(lst -> content);
-		lst = lst -> next;
+		ft_putendl_fd(shell->pwd, STDOUT_FILENO);
+		return (EXIT_SUCCESS);
 	}
+	return (EXIT_FAILURE);
 }

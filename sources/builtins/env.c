@@ -1,30 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/27 20:37:02 by pkhienko          #+#    #+#             */
-/*   Updated: 2025/04/19 20:55:13 by sklaokli         ###   ########.fr       */
+/*   Created: 2025/04/19 21:56:43 by sklaokli          #+#    #+#             */
+/*   Updated: 2025/04/19 22:04:31 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	*ft_calloc(size_t nmemb, size_t size)
+void	env_builtin(t_shell *shell)
 {
-	void	*tmp;
-	size_t	nb;
+	t_env	*env;
 
-	nb = nmemb * size;
-	if ((long)nmemb == 0 || (long)size == 0)
-		nb = 1;
-	else if ((long)nmemb < 0 || (long)size < 0 || nmemb * size > __INT_MAX__)
-		return (NULL);
-	tmp = malloc(nb);
-	if (!tmp)
-		return (NULL);
-	ft_bzero(tmp, nb);
-	return (tmp);
+	env = shell->env;
+	while (env)
+	{
+		if (env->key)
+			ft_putstr_fd(env->key, STDOUT_FILENO);
+		if (env->equal)
+			ft_putstr_fd(&env->equal, STDOUT_FILENO);
+		if (env->value)
+			ft_putstr_fd(env->value, STDOUT_FILENO);
+		ft_putendl_fd("", STDOUT_FILENO);
+		env = env->next;
+	}
 }

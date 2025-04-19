@@ -1,24 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tree.c                                             :+:      :+:    :+:   */
+/*   ft_lstlast.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/09 00:44:42 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/09 00:54:47 by sklaokli         ###   ########.fr       */
+/*   Created: 2024/08/29 14:29:46 by pkhienko          #+#    #+#             */
+/*   Updated: 2025/04/19 21:14:47 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "libft.h"
 
-int	main(int ac, char *av[], char *env[])
+void	*ft_lstlast(void *lst)
 {
-	char *argv[] = {
-		"cat",
-		"tree.c",
-		"-e",
-		NULL
-	};
-	execve("/bin/cat", argv, env);
+	t_list	*tmp;
+
+	tmp = lst;
+	while (tmp && tmp->next)
+		tmp = tmp->next;
+	return (tmp);
 }

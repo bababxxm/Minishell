@@ -6,40 +6,36 @@
 #    By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/18 19:44:55 by sklaokli          #+#    #+#              #
-#    Updated: 2025/04/09 05:11:18 by sklaokli         ###   ########.fr        #
+#    Updated: 2025/04/19 22:08:37 by sklaokli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-## Libraries
 NAME		:=	minishell
+LIBFT		:=	libft/libft.a 
 
-## Paths to files
 SRC_DIR		:=	sources
 OBJ_DIR		:=	objects
 INC_DIR		:=	include
 
-## Source files
+FILES		:=	\
+				shell/main.c \
+				env/env.c \
+				env/token.c \
+				builtins/cd.c \
+				builtins/echo.c \
+				builtins/env.c \
+				builtins/pwd.c
+
 SRC			:=	$(addprefix $(SRC_DIR)/, $(FILES))
-FILES		:=	sklaokli/main.c sklaokli/env.c sklaokli/utils.c sklaokli/token.c
-
-## Include files
-INC			:=	-I $(INC_DIR)
-
-## Object files
 OBJ			:=	$(addprefix $(OBJ_DIR)/, $(FILES:.c=.o))
 
-## Total number of files
-COMPILED	:=	0
-TOTAL_FILES	:=	$(words $(OBJ))
+INC			:=	-I $(INC_DIR) -I libft/include
 
-## Commands
-RM			:=	rm -f
 CC			:=	cc
-LIBC		:=	ar rcs
-WFLAG		:=	
+RM			:=	rm -rf
+WFLAGS		:=
 RL_FLAG		:=	-lreadline -lhistory -lncurses
 
-## Color Codes
 CYAN		:=	\033[0;36m
 GREEN		:=	\033[0;32m
 RED			:=	\033[0;31m
@@ -47,28 +43,35 @@ BLUE		:=	\033[0;34m
 YELLOW		:=	\033[0;33m
 RESET		:=	\033[0m
 
-## Targets
-$(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c
+TOTAL_FILES	:=	$(words $(OBJ))
+COMPILED	:=	0
+
+all: 			$(NAME)
+
+$(NAME):		$(LIBFT) $(OBJ)
+				@ $(CC) $(WFLAGS) $(OBJ) $(LIBFT) $(RL_FLAG) -o $(NAME)
+				@ echo "$(GREEN)[OK] $(NAME) built succesfully.$(RESET)"
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 				@ mkdir -p $(dir $@)
 				@ $(eval COMPILED=$(shell echo $$(($(COMPILED)+1))))
 				@ PERCENT=$$(($(COMPILED)*100/$(TOTAL_FILES))); \
-				echo "$(BLUE)[$(COMPILED)/$(TOTAL_FILES)] Compiling $< ($$PERCENT%)$(RESET)\r"; \
-				$(CC) $(WFLAG) -I $(INC_DIR) -c $< -o $@
+				echo "$(BLUE)[$(COMPILED)/$(TOTAL_FILES)] Compiling $< ($$PERCENT%)$(RESET)\r"
+				@ $(CC) $(WFLAGS) $(INC) -c $< -o $@
 
-all:		$(NAME)
-
-$(NAME):	$(OBJ) Makefile
-			@ $(CC) $(RL_FLAG) $(WFLAG) $(OBJ) $(INC) -o $(NAME)
-			@ echo "$(GREEN)Done! $(NAME) is now ready.$(RESET)"
+$(LIBFT):
+				@ $(MAKE) -sC libft
 
 clean:
-			@ $(RM) -rf $(OBJ_DIR)
-			@ echo "$(CYAN)All $(NAME) object files have been cleaned.$(RESET)"
+				@ $(RM) $(OBJ_DIR)
+				@ $(MAKE) -sC libft clean
+				@ echo "$(CYAN)All $(NAME) object files have been cleaned.$(RESET)"
 
-fclean:
-			@ $(RM) -rf $(OBJ_DIR) $(NAME)
-			@ echo "$(CYAN)All $(NAME) executable files have been cleaned.$(RESET)"
+fclean:			clean
+				@ $(RM) $(NAME)
+				@ $(MAKE) -sC libft fclean
+				@ echo "$(CYAN)All $(NAME) executable files have been cleaned.$(RESET)"
 
-re:			fclean all
+re:				fclean all
 
-.PHONY:		all clean fclean re
+.PHONY:			all clean fclean re
