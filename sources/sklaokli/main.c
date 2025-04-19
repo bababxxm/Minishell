@@ -6,19 +6,11 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 18:22:18 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/16 21:54:39 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/04/19 20:28:21 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-// void    sighandler(int sig, siginfo_t *info, void *ucontext)
-// {
-//     if (sig == SIGINT)
-//     {
-//         printf("\n%s$ ", PROMPT);
-//     }
-// }
 
 char    *parser(char *input, t_shell *shell)
 {
@@ -40,14 +32,12 @@ void    execute(t_cmds *cmds, t_shell *shell)
 
 }
 
-void    sigint_handler(int sigint)
+void    signal_handler(int signal)
 {
-    
-}
-
-void    sigquit_handler(int sigquit)
-{
-    
+    if (signal == SIGINT)
+        printf("\n%s", PROMPT);
+    else if (signal == SIGQUIT)
+        return ;
 }
 
 void    init_shell(char *env[], t_shell *shell)
@@ -60,8 +50,8 @@ void    init_shell(char *env[], t_shell *shell)
     shell->home = search_env(shell->env, "HOME")->value;
     shell->oldpwd = search_env(shell->env, "OLDPWD")->value;
     shell->pwd = search_env(shell->env, "PWD")->value;
-    signal(SIGINT, &sigint_handler);
-    signal(SIGQUIT, &sigquit_handler);
+    signal(SIGINT, &signal_handler);
+    signal(SIGQUIT, &signal_handler);
 }
 
 void    exit_shell(t_shell *shell)
